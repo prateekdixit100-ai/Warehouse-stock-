@@ -12,6 +12,8 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { TollPlaza, RouteState, VehicleType, VEHICLE_LABELS } from '../../types';
 import { getFeeColor } from '../../hooks/useTollData';
+import { LANDBAND_CORRIDORS, LANDBAND_HUBS, HUB_TYPE_LABELS, HUB_TYPE_COLORS } from '../../data/mpLandband';
+import LandbandLayer from './LandbandLayer';
 import clsx from 'clsx';
 
 // Fix default Leaflet icon URLs (webpack/vite asset path issue)
@@ -43,6 +45,7 @@ interface MapViewProps {
   routeState: RouteState;
   onMapClick: (lat: number, lng: number) => void;
   vehicleType: VehicleType;
+  landbandVisible: boolean;
 }
 
 function MapClickHandler({ onClick, active }: { onClick: (lat: number, lng: number) => void; active: boolean }) {
@@ -63,6 +66,7 @@ export default function MapView({
   routeState,
   onMapClick,
   vehicleType,
+  landbandVisible,
 }: MapViewProps) {
   const mapRef = useRef<L.Map | null>(null);
 
@@ -105,6 +109,19 @@ export default function MapView({
             <span className="text-slate-300">{label}</span>
           </div>
         ))}
+
+        {/* Landband legend */}
+        {landbandVisible && (
+          <>
+            <div className="border-t border-slate-600 mt-2 pt-2 text-slate-400 font-medium mb-1">MP Landband Hubs</div>
+            {(Object.entries(HUB_TYPE_COLORS) as [keyof typeof HUB_TYPE_COLORS, string][]).map(([type, color]) => (
+              <div key={type} className="flex items-center gap-2 mb-1">
+                <div className="w-3 h-3 rounded-full border border-white/40" style={{ background: color }} />
+                <span className="text-slate-300">{HUB_TYPE_LABELS[type]}</span>
+              </div>
+            ))}
+          </>
+        )}
       </div>
 
       <MapContainer
@@ -186,6 +203,13 @@ export default function MapView({
             }}
           />
         ))}
+
+        {/* MP Landband overlay */}
+        <LandbandLayer
+          corridors={LANDBAND_CORRIDORS}
+          hubs={LANDBAND_HUBS}
+          visible={landbandVisible}
+        />
       </MapContainer>
     </div>
   );

@@ -1,5 +1,6 @@
-import { BarChart2, Map, Navigation, X, ChevronRight } from 'lucide-react';
+import { BarChart2, Map, Navigation, X, ChevronRight, Layers } from 'lucide-react';
 import { AppStats, RouteState } from '../types';
+import { LANDBAND_SUMMARY } from '../data/mpLandband';
 import clsx from 'clsx';
 
 interface HeaderProps {
@@ -9,6 +10,8 @@ interface HeaderProps {
   onToggleRoute: () => void;
   analyticsOpen: boolean;
   onToggleAnalytics: () => void;
+  landbandVisible: boolean;
+  onToggleLandband: () => void;
 }
 
 export default function Header({
@@ -18,6 +21,8 @@ export default function Header({
   onToggleRoute,
   analyticsOpen,
   onToggleAnalytics,
+  landbandVisible,
+  onToggleLandband,
 }: HeaderProps) {
   return (
     <header className="flex items-center justify-between px-4 h-14 bg-surface-800 border-b border-slate-700/60 flex-shrink-0 z-10">
@@ -58,6 +63,21 @@ export default function Header({
             )}
           </div>
         )}
+
+        {/* Landband toggle */}
+        <button
+          onClick={onToggleLandband}
+          title={`MP Landband: ${LANDBAND_SUMMARY.corridors} corridors, ${LANDBAND_SUMMARY.hubs} hubs`}
+          className={clsx(
+            'flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium transition-colors border',
+            landbandVisible
+              ? 'bg-amber-900/60 border-amber-500/40 text-amber-300 hover:bg-amber-900'
+              : 'bg-transparent border-slate-600 text-slate-400 hover:border-amber-500/40 hover:text-amber-300'
+          )}
+        >
+          <Layers size={12} />
+          <span className="hidden sm:inline">MP Landband</span>
+        </button>
 
         <button
           onClick={onToggleRoute}

@@ -1,70 +1,61 @@
-// ── Core plaza type matching actual NHAI TIS data ─────────────────────────
+// ── Vehicle types ───────────────────────────────────────────────────────────
+export type VehicleType =
+  | 'car_jeep_van'
+  | 'lcv_minibus'
+  | 'bus_truck'
+  | 'multi_axle'
+  | 'heavy_construction'
+  | 'oversized';
+
+export const VEHICLE_LABELS: Record<VehicleType, string> = {
+  car_jeep_van: 'Car / Jeep / Van',
+  lcv_minibus: 'LCV / Mini Bus',
+  bus_truck: 'Bus / Truck',
+  multi_axle: 'Multi-Axle Vehicle',
+  heavy_construction: 'Heavy Construction',
+  oversized: 'Oversized Vehicle',
+};
+
+// ── Core plaza type matching toll plaza data ────────────────────────────────
+export interface TollFees {
+  car_jeep_van: number;
+  lcv_minibus: number;
+  bus_truck: number;
+  multi_axle: number;
+  heavy_construction: number;
+  oversized: number;
+}
+
 export interface TollPlaza {
-  idx: number;          // array index (used as lane reference)
+  id: string;
   name: string;
+  highway: string;
+  state: string;
+  district: string;
   lat: number;
   lng: number;
-  daily_pcu: number;    // Passenger Car Units / day
-  lcv_fee: number;      // Light Commercial Vehicle / Mini Bus
-  hcm_fee: number;      // Bus / Truck (2-axle) / Heavy Construction Machinery
-  mav_fee: number;      // Multi-Axle Vehicle
-  car_fee: number;      // Estimated car fee ≈ 0.6 × lcv_fee
-  contractor: string;
-  is_estimated: boolean; // false = NHAI verified, true = PCU estimated
-  contract_type: string; // BOT (Toll) | Public Funded | OMT | HAM | SPV
-}
-
-// ── Corridor (lane) between two plazas ─────────────────────────────────────
-export interface Lane {
-  from: number;   // plaza idx
-  to: number;     // plaza idx
-  volume: number; // PCU / day on this corridor
-}
-
-// ── GIS overlay types ───────────────────────────────────────────────────────
-export interface Expressway {
-  name: string;
-  km: number;
-  cost: string;
-  status: 'Under Construction' | 'Partially Open' | 'DPR Stage' | 'Planned' | 'Approved' | 'Partially UC';
-  year: string;
-  color: string;
-  path: [number, number][];
-}
-
-export interface MMLP {
-  name: string;
-  lat: number;
-  lng: number;
-  status: 'Operational' | 'Awarded' | 'Near Complete' | 'Bid Invited' | 'DPR Stage' | 'Approved';
-  developer: string;
-  acres: number;
-  cost: string;
-}
-
-export interface GrowthZone {
-  name: string;
-  lat: number;
-  lng: number;
-  score: number; // 0–100
-  driver: string;
-  color: string;
+  fees: TollFees;
+  operator?: string;
+  commissioned_year?: number;
+  direction?: string;
+  daily_traffic?: number;
+  plaza_type?: string;
 }
 
 // ── Filter / UI state ───────────────────────────────────────────────────────
 export interface FilterState {
-  minPCU: number;
-  laneMode: 'top' | 'all' | 'hot' | 'none';
-  overlayMode: 'traffic' | 'expressways' | 'mmlp' | 'growth' | 'all';
+  states: string[];
+  highways: string[];
+  minFee: number;
+  maxFee: number;
   searchQuery: string;
-  contractTypes: string[];
+  vehicleType: VehicleType;
 }
-
-export type SidebarTab = 'map' | 'growth' | 'data';
 
 export interface RoutePoint {
   lat: number;
   lng: number;
+  label?: string;
 }
 
 export interface RouteState {
@@ -73,17 +64,15 @@ export interface RouteState {
   origin: RoutePoint | null;
   destination: RoutePoint | null;
   plazasOnRoute: TollPlaza[];
-  totalLCV: number;
-  totalHCM: number;
-  totalMAV: number;
+  totalCost: number;
   distanceKm: number;
 }
 
 export interface AppStats {
   totalPlazas: number;
-  verifiedPlazas: number;
-  totalDailyPCU: number;
-  avgPCU: number;
-  maxPCU: number;
-  uniqueContractTypes: number;
+  uniqueStates: number;
+  uniqueHighways: number;
+  avgCarFee: number;
+  maxCarFee: number;
+  minCarFee: number;
 }

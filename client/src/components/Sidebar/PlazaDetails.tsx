@@ -1,4 +1,4 @@
-import { ArrowLeft, MapPin, Road, Building2, CalendarDays, Truck, Car, Bus } from 'lucide-react';
+import { ArrowLeft, MapPin, ArrowLeftRight, Building2, CalendarDays, Truck, Car, Bus } from 'lucide-react';
 import { TollPlaza, VEHICLE_LABELS } from '../../types';
 import { getFeeColor } from '../../hooks/useTollData';
 
@@ -46,7 +46,7 @@ export default function PlazaDetails({ plaza, onBack }: PlazaDetailsProps) {
         {plaza.daily_traffic && (
           <InfoRow icon={<Truck size={13} />} label="Daily Traffic" value={`${plaza.daily_traffic.toLocaleString()} PCU/day`} />
         )}
-        <InfoRow icon={<Road size={13} />} label="Direction" value={plaza.direction === 'both' ? 'Bi-directional' : 'One-way'} />
+        <InfoRow icon={<ArrowLeftRight size={13} />} label="Direction" value={plaza.direction === 'both' ? 'Bi-directional' : 'One-way'} />
 
         {/* Fee table */}
         <div className="mt-4">

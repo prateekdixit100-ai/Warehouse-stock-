@@ -35,6 +35,7 @@ export default function App() {
   const [selectedPlaza, setSelectedPlaza] = useState<TollPlaza | null>(null);
   const [routeState, setRouteState] = useState<RouteState>(INITIAL_ROUTE);
   const [analyticsOpen, setAnalyticsOpen] = useState(true);
+  const [landbandVisible, setLandbandVisible] = useState(true);
 
   const handleSelectPlaza = useCallback((plaza: TollPlaza | null) => {
     setSelectedPlaza(plaza);
@@ -86,6 +87,8 @@ export default function App() {
         onToggleRoute={handleToggleRouteMode}
         analyticsOpen={analyticsOpen}
         onToggleAnalytics={() => setAnalyticsOpen(v => !v)}
+        landbandVisible={landbandVisible}
+        onToggleLandband={() => setLandbandVisible(v => !v)}
       />
 
       <div className="flex flex-1 overflow-hidden">
@@ -111,6 +114,7 @@ export default function App() {
           routeState={routeState}
           onMapClick={handleMapClick}
           vehicleType={filters.vehicleType}
+          landbandVisible={landbandVisible}
         />
 
         {/* Right analytics panel */}
