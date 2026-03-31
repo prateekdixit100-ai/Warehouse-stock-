@@ -19,6 +19,11 @@ export interface WarehouseHotspot {
   vacancy_pct?: number;
   absorption_2025_msf?: number;  // million sq ft leased in 2025
   supply_2025_msf?: number;      // new Grade A supply in 2025
+  // City-level warehousing details
+  total_stock_msf?: number;      // total Grade A warehousing stock in msf
+  num_parks?: number;            // approximate number of logistics/warehousing parks
+  key_developers?: string[];     // major Grade A developers/operators
+  key_logistics_parks?: string[]; // notable park names
   demand_drivers: string[];
   key_infra: string[];
 }
@@ -51,6 +56,9 @@ export const WAREHOUSE_HOTSPOTS: WarehouseHotspot[] = [
     lat: 28.67, lng: 77.22,
     rental_min: 27, rental_max: 50, vacancy_pct: 12.7,
     absorption_2025_msf: 8.8, supply_2025_msf: 12.4,
+    total_stock_msf: 95, num_parks: 120,
+    key_developers: ['Welspun One', 'IndoSpace', 'Lodha', 'ESR', 'Panattoni', 'Greenbase'],
+    key_logistics_parks: ['Welspun One Navi Mumbai', 'IndoSpace Kundli', 'ESR Farukhnagar', 'GMR Aerocity Logistics', 'Panattoni Greater Noida'],
     demand_drivers: ['3PL', 'E-Commerce', 'FMCG'],
     key_infra: ['DMIC', 'AKIC', 'Jewar Airport', 'EDFC+WDFC', 'Greater Noida Smart City'],
   },
@@ -59,6 +67,9 @@ export const WAREHOUSE_HOTSPOTS: WarehouseHotspot[] = [
     lat: 13.08, lng: 80.27,
     rental_min: 20, rental_max: 40, vacancy_pct: 22.2,
     absorption_2025_msf: 8.1, supply_2025_msf: 8.0,
+    total_stock_msf: 45, num_parks: 55,
+    key_developers: ['IndoSpace', 'ESR', 'TVS Industrial', 'Hiranandani', 'Lodha'],
+    key_logistics_parks: ['IndoSpace Oragadam', 'ESR Sriperumbudur', 'TVS Tiruvallur', 'Hiranandani Logistics Park'],
     demand_drivers: ['Engineering', '3PL', 'Automobile'],
     key_infra: ['CBIC', 'VCIC', 'Parandur Airport', 'MMLP ₹1,423 Cr', 'Kamarajar Port'],
   },
@@ -67,14 +78,20 @@ export const WAREHOUSE_HOTSPOTS: WarehouseHotspot[] = [
     lat: 12.97, lng: 77.59,
     rental_min: 20, rental_max: 45, vacancy_pct: 22.1,
     absorption_2025_msf: 3.5, supply_2025_msf: 3.2,
+    total_stock_msf: 38, num_parks: 48,
+    key_developers: ['ESR', 'IndoSpace', 'Brigade', 'Logos', 'Welspun One'],
+    key_logistics_parks: ['ESR Whitefield', 'IndoSpace Hoskote', 'Brigade Logistics Park', 'Logos Doddaballapur'],
     demand_drivers: ['Engineering', 'Automobile', 'Retail'],
     key_infra: ['CBIC', 'HBIC', 'BMIC', 'Tumakuru Smart City', 'MMLP ₹1,769 Cr'],
   },
   {
-    id: 'WH-MUM', name: 'Mumbai', cluster: 'PRIME', region: 'West',
+    id: 'WH-MUM', name: 'Mumbai MMR', cluster: 'PRIME', region: 'West',
     lat: 19.08, lng: 72.88,
     rental_min: 32, rental_max: 50, vacancy_pct: 18.6,
     absorption_2025_msf: 4.9, supply_2025_msf: 6.1,
+    total_stock_msf: 52, num_parks: 70,
+    key_developers: ['Welspun One', 'ESR', 'Hiranandani', 'Logos', 'NDR'],
+    key_logistics_parks: ['Welspun One Navi Mumbai', 'ESR Bhiwandi', 'Hiranandani Panvel', 'NDR Bhiwandi', 'Logos Bhiwandi'],
     demand_drivers: ['3PL', 'E-Commerce', 'FMCG'],
     key_infra: ['DMIC', 'BMIC', 'Navi Mumbai Airport', 'JNPT', 'Vadhavan Port'],
   },
@@ -83,6 +100,9 @@ export const WAREHOUSE_HOTSPOTS: WarehouseHotspot[] = [
     lat: 18.52, lng: 73.86,
     rental_min: 15, rental_max: 20, vacancy_pct: 4.6,
     absorption_2025_msf: 4.8, supply_2025_msf: 4.6,
+    total_stock_msf: 32, num_parks: 42,
+    key_developers: ['IndoSpace', 'ESR', 'Panchshil', 'Kolte-Patil', 'Welspun One'],
+    key_logistics_parks: ['IndoSpace Chakan', 'ESR Pune', 'Panchshil Industrial Park', 'Kolte-Patil Hinjawadi'],
     demand_drivers: ['Engineering', '3PL', 'Automobile'],
     key_infra: ['BMIC', 'Purandar Airport', 'Dighi Port'],
   },
@@ -91,6 +111,9 @@ export const WAREHOUSE_HOTSPOTS: WarehouseHotspot[] = [
     lat: 17.38, lng: 78.49,
     rental_min: 15, rental_max: 27, vacancy_pct: 14.7,
     absorption_2025_msf: 2.4, supply_2025_msf: 2.1,
+    total_stock_msf: 22, num_parks: 30,
+    key_developers: ['IndoSpace', 'ESR', 'Logos', 'Hiranandani', 'Greenbase'],
+    key_logistics_parks: ['IndoSpace Patancheru', 'ESR Hyderabad', 'Logos IDA Bollaram', 'Hiranandani Industrial Park'],
     demand_drivers: ['3PL', 'Engineering', 'E-Commerce'],
     key_infra: ['HNIC', 'HWIC', 'HBIC', 'Zaheerabad Smart City'],
   },
@@ -99,6 +122,9 @@ export const WAREHOUSE_HOTSPOTS: WarehouseHotspot[] = [
     lat: 22.57, lng: 88.36,
     rental_min: 12, rental_max: 30, vacancy_pct: 7.1,
     absorption_2025_msf: 2.5, supply_2025_msf: 3.1,
+    total_stock_msf: 18, num_parks: 22,
+    key_developers: ['IndoSpace', 'Logos', 'Xander', 'JLL-managed assets'],
+    key_logistics_parks: ['IndoSpace Kalyani', 'Logos Dankuni', 'Xander Group Kolkata'],
     demand_drivers: ['3PL', 'E-Commerce', 'FMCG'],
     key_infra: ['AKIC', 'EDFC', 'Kalyani Airport', 'Haldia Port'],
   },
@@ -107,6 +133,9 @@ export const WAREHOUSE_HOTSPOTS: WarehouseHotspot[] = [
     lat: 23.03, lng: 72.59,
     rental_min: 13, rental_max: 27, vacancy_pct: 12.6,
     absorption_2025_msf: 1.9, supply_2025_msf: 2.2,
+    total_stock_msf: 20, num_parks: 28,
+    key_developers: ['IndoSpace', 'ESR', 'Welspun One', 'Gujarat Industrial Dev. Corp.'],
+    key_logistics_parks: ['IndoSpace Ahmedabad', 'ESR Sanand', 'Welspun One Ahmedabad', 'GIDC Logistics Park'],
     demand_drivers: ['3PL', 'FMCG', 'Automobile'],
     key_infra: ['DMIC', 'Dholera Smart City', 'Dholera Airport', 'WDFC'],
   },
