@@ -5,6 +5,7 @@ import Header from './components/Header';
 import MapView from './components/Map/MapView';
 import Sidebar from './components/Sidebar/Sidebar';
 import AnalyticsPanel from './components/Analytics/AnalyticsPanel';
+import { DEFAULT_LAYER_FILTERS, LayerFilters } from './components/Sidebar/LayersPanel';
 
 const INITIAL_ROUTE: RouteState = {
   isActive: false,
@@ -18,7 +19,6 @@ const INITIAL_ROUTE: RouteState = {
 
 export default function App() {
   const {
-    allPlazas,
     filteredPlazas,
     filters,
     updateFilter,
@@ -36,8 +36,11 @@ export default function App() {
   const [selectedPlaza, setSelectedPlaza] = useState<TollPlaza | null>(null);
   const [routeState, setRouteState] = useState<RouteState>(INITIAL_ROUTE);
   const [analyticsOpen, setAnalyticsOpen] = useState(true);
-  const [landbandVisible, setLandbandVisible] = useState(true);
-  const [colliersVisible, setColliersVisible] = useState(true);
+  const [layerFilters, setLayerFilters] = useState<LayerFilters>(DEFAULT_LAYER_FILTERS);
+
+  const updateLayer = useCallback((patch: Partial<LayerFilters>) => {
+    setLayerFilters(prev => ({ ...prev, ...patch }));
+  }, []);
 
   const handleSelectPlaza = useCallback((plaza: TollPlaza | null) => {
     setSelectedPlaza(plaza);
@@ -53,7 +56,6 @@ export default function App() {
 
   const handleMapClick = useCallback((lat: number, lng: number) => {
     if (!routeState.isActive) return;
-
     if (routeState.step === 'picking-origin') {
       setRouteState(prev => ({
         ...prev,
@@ -64,18 +66,12 @@ export default function App() {
       const origin: [number, number] = [routeState.origin!.lat, routeState.origin!.lng];
       const destination: [number, number] = [lat, lng];
       const plazasOnRoute = getPlazasNearRoute(filteredPlazas, origin, destination);
-      const totalCost = plazasOnRoute.reduce(
-        (sum, p) => sum + p.fees[filters.vehicleType], 0
-      );
+      const totalCost = plazasOnRoute.reduce((sum, p) => sum + p.fees[filters.vehicleType], 0);
       const distanceKm = calcRouteDistance(origin, destination);
-
       setRouteState(prev => ({
-        ...prev,
-        step: 'complete',
+        ...prev, step: 'complete',
         destination: { lat, lng, label: `${lat.toFixed(4)}, ${lng.toFixed(4)}` },
-        plazasOnRoute,
-        totalCost,
-        distanceKm,
+        plazasOnRoute, totalCost, distanceKm,
       }));
     }
   }, [routeState, filteredPlazas, filters.vehicleType]);
@@ -89,15 +85,10 @@ export default function App() {
         onToggleRoute={handleToggleRouteMode}
         analyticsOpen={analyticsOpen}
         onToggleAnalytics={() => setAnalyticsOpen(v => !v)}
-        landbandVisible={landbandVisible}
-        onToggleLandband={() => setLandbandVisible(v => !v)}
-        colliersVisible={colliersVisible}
-        onToggleColliers={() => setColliersVisible(v => !v)}
         loading={loading}
       />
 
       <div className="flex flex-1 overflow-hidden">
-        {/* Left sidebar */}
         <Sidebar
           filteredPlazas={filteredPlazas}
           selectedPlaza={selectedPlaza}
@@ -109,21 +100,20 @@ export default function App() {
           availableHighways={availableHighways}
           onSelectPlaza={handleSelectPlaza}
           routeState={routeState}
+          layerFilters={layerFilters}
+          onUpdateLayer={updateLayer}
         />
 
-        {/* Map (flex center) */}
         <MapView
-          plazas={filteredPlazas}
+          plazas={layerFilters.plazasVisible ? filteredPlazas : []}
           selectedPlaza={selectedPlaza}
           onSelectPlaza={handleSelectPlaza}
           routeState={routeState}
           onMapClick={handleMapClick}
           vehicleType={filters.vehicleType}
-          landbandVisible={landbandVisible}
-          colliersVisible={colliersVisible}
+          layerFilters={layerFilters}
         />
 
-        {/* Right analytics panel */}
         {analyticsOpen && (
           <AnalyticsPanel
             filteredPlazas={filteredPlazas}
