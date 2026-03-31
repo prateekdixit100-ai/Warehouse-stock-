@@ -12,6 +12,8 @@ interface HeaderProps {
   onToggleAnalytics: () => void;
   landbandVisible: boolean;
   onToggleLandband: () => void;
+  colliersVisible: boolean;
+  onToggleColliers: () => void;
   loading: boolean;
 }
 
@@ -24,6 +26,8 @@ export default function Header({
   onToggleAnalytics,
   landbandVisible,
   onToggleLandband,
+  colliersVisible,
+  onToggleColliers,
   loading,
 }: HeaderProps) {
   return (
@@ -74,6 +78,21 @@ export default function Header({
             )}
           </div>
         )}
+
+        {/* Colliers warehousing toggle */}
+        <button
+          onClick={onToggleColliers}
+          title="Colliers Warehousing Hotspots — 30 cities, 8 national corridors"
+          className={clsx(
+            'flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium transition-colors border',
+            colliersVisible
+              ? 'bg-blue-900/60 border-blue-500/40 text-blue-300 hover:bg-blue-900'
+              : 'bg-transparent border-slate-600 text-slate-400 hover:border-blue-500/40 hover:text-blue-300'
+          )}
+        >
+          <Layers size={12} />
+          <span className="hidden sm:inline">Warehousing</span>
+        </button>
 
         {/* Landband toggle */}
         <button

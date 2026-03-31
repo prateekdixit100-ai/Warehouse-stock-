@@ -37,6 +37,7 @@ export default function App() {
   const [routeState, setRouteState] = useState<RouteState>(INITIAL_ROUTE);
   const [analyticsOpen, setAnalyticsOpen] = useState(true);
   const [landbandVisible, setLandbandVisible] = useState(true);
+  const [colliersVisible, setColliersVisible] = useState(true);
 
   const handleSelectPlaza = useCallback((plaza: TollPlaza | null) => {
     setSelectedPlaza(plaza);
@@ -90,6 +91,8 @@ export default function App() {
         onToggleAnalytics={() => setAnalyticsOpen(v => !v)}
         landbandVisible={landbandVisible}
         onToggleLandband={() => setLandbandVisible(v => !v)}
+        colliersVisible={colliersVisible}
+        onToggleColliers={() => setColliersVisible(v => !v)}
         loading={loading}
       />
 
@@ -117,6 +120,7 @@ export default function App() {
           onMapClick={handleMapClick}
           vehicleType={filters.vehicleType}
           landbandVisible={landbandVisible}
+          colliersVisible={colliersVisible}
         />
 
         {/* Right analytics panel */}
