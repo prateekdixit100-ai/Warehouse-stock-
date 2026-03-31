@@ -35,10 +35,12 @@ export interface TollPlaza {
   lat: number;
   lng: number;
   fees: TollFees;
+  fees_return?: TollFees;
+  three_axle_sj?: number;
   operator?: string;
-  commissioned_year?: number;
-  direction?: string;
-  daily_traffic?: number;
+  concessionaire_type?: string;
+  location_km?: string;
+  address?: string;
   plaza_type?: string;
 }
 

@@ -238,10 +238,10 @@ function PlazaPopup({ plaza, vehicleType }: { plaza: TollPlaza; vehicleType: Veh
             <div className="text-slate-300">{plaza.operator}</div>
           </>
         )}
-        {plaza.daily_traffic && (
+        {plaza.location_km && (
           <>
-            <div className="text-slate-500">Daily Traffic</div>
-            <div className="text-slate-300">{plaza.daily_traffic.toLocaleString()} PCU</div>
+            <div className="text-slate-500">KM Marker</div>
+            <div className="text-slate-300">{plaza.location_km}</div>
           </>
         )}
       </div>

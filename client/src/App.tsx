@@ -30,6 +30,7 @@ export default function App() {
     feeDistribution,
     availableStates,
     availableHighways,
+    loading,
   } = useTollData();
 
   const [selectedPlaza, setSelectedPlaza] = useState<TollPlaza | null>(null);
@@ -89,6 +90,7 @@ export default function App() {
         onToggleAnalytics={() => setAnalyticsOpen(v => !v)}
         landbandVisible={landbandVisible}
         onToggleLandband={() => setLandbandVisible(v => !v)}
+        loading={loading}
       />
 
       <div className="flex flex-1 overflow-hidden">

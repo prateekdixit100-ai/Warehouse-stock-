@@ -12,6 +12,7 @@ interface HeaderProps {
   onToggleAnalytics: () => void;
   landbandVisible: boolean;
   onToggleLandband: () => void;
+  loading: boolean;
 }
 
 export default function Header({
@@ -23,6 +24,7 @@ export default function Header({
   onToggleAnalytics,
   landbandVisible,
   onToggleLandband,
+  loading,
 }: HeaderProps) {
   return (
     <header className="flex items-center justify-between px-4 h-14 bg-surface-800 border-b border-slate-700/60 flex-shrink-0 z-10">
@@ -41,11 +43,20 @@ export default function Header({
 
       {/* Quick stats */}
       <div className="hidden md:flex items-center gap-6">
-        <StatBadge label="Total Plazas" value={stats.totalPlazas.toString()} />
-        <StatBadge label="Visible" value={filteredCount.toString()} accent />
-        <StatBadge label="States" value={stats.uniqueStates.toString()} />
-        <StatBadge label="Highways" value={stats.uniqueHighways.toString()} />
-        <StatBadge label="Avg Car Fee" value={`₹${stats.avgCarFee}`} />
+        {loading ? (
+          <div className="flex items-center gap-2 text-xs text-slate-400 animate-pulse">
+            <div className="w-3 h-3 rounded-full bg-blue-500 animate-bounce" />
+            Loading 1,563 toll plazas…
+          </div>
+        ) : (
+          <>
+            <StatBadge label="Total Plazas" value={stats.totalPlazas.toLocaleString()} />
+            <StatBadge label="Visible" value={filteredCount.toLocaleString()} accent />
+            <StatBadge label="States" value={stats.uniqueStates.toString()} />
+            <StatBadge label="Highways" value={stats.uniqueHighways.toString()} />
+            <StatBadge label="Avg Car Fee" value={`₹${stats.avgCarFee}`} />
+          </>
+        )}
       </div>
 
       {/* Actions */}

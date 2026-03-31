@@ -40,13 +40,15 @@ export default function PlazaDetails({ plaza, onBack }: PlazaDetailsProps) {
         {plaza.operator && (
           <InfoRow icon={<Building2 size={13} />} label="Operator" value={plaza.operator} />
         )}
-        {plaza.commissioned_year && (
-          <InfoRow icon={<CalendarDays size={13} />} label="Commissioned" value={plaza.commissioned_year.toString()} />
+        {plaza.address && (
+          <InfoRow icon={<CalendarDays size={13} />} label="Section" value={plaza.address} />
         )}
-        {plaza.daily_traffic && (
-          <InfoRow icon={<Truck size={13} />} label="Daily Traffic" value={`${plaza.daily_traffic.toLocaleString()} PCU/day`} />
+        {plaza.location_km && (
+          <InfoRow icon={<Truck size={13} />} label="Location" value={plaza.location_km} />
         )}
-        <InfoRow icon={<ArrowLeftRight size={13} />} label="Direction" value={plaza.direction === 'both' ? 'Bi-directional' : 'One-way'} />
+        {plaza.concessionaire_type && (
+          <InfoRow icon={<ArrowLeftRight size={13} />} label="Type" value={plaza.concessionaire_type === 'Conc.' ? 'Concessionaire (BOT)' : 'Project Facilitated (NHAI)'} />
+        )}
 
         {/* Fee table */}
         <div className="mt-4">
@@ -77,13 +79,13 @@ export default function PlazaDetails({ plaza, onBack }: PlazaDetailsProps) {
           </div>
         </div>
 
-        {/* Return journey estimate */}
+        {/* Return journey */}
         <div className="mt-3 p-3 bg-blue-950/40 border border-blue-800/30 rounded-lg">
-          <div className="text-xs text-blue-400 mb-1">Round Trip Estimate (Car)</div>
+          <div className="text-xs text-blue-400 mb-1">Return Journey (Car)</div>
           <div className="text-xl font-bold font-mono text-blue-300">
-            ₹{plaza.fees.car_jeep_van * 2}
+            ₹{plaza.fees_return?.car_jeep_van || plaza.fees.car_jeep_van * 2}
           </div>
-          <div className="text-xs text-slate-500 mt-0.5">Both directions combined</div>
+          <div className="text-xs text-slate-500 mt-0.5">Single journey: ₹{plaza.fees.car_jeep_van}</div>
         </div>
       </div>
     </div>
