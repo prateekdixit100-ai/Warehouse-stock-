@@ -15,7 +15,7 @@ import {
 } from '../../data/colliersWarehousing';
 import LandbandLayer from './LandbandLayer';
 import ColliersLayer from './ColliersLayer';
-import { LayerFilters } from '../Sidebar/LayersPanel';
+import { LayerFilters, BasemapStyle } from '../Sidebar/LayersPanel';
 import clsx from 'clsx';
 
 delete (L.Icon.Default.prototype as unknown as Record<string, unknown>)._getIconUrl;
@@ -79,6 +79,7 @@ export default function MapView({
 }: MapViewProps) {
   const mapRef = useRef<L.Map | null>(null);
   const [boundaryGeo, setBoundaryGeo] = useState<object | null>(null);
+  const [railGeo, setRailGeo] = useState<object | null>(null);
 
   useEffect(() => {
     if (selectedPlaza && mapRef.current) {
@@ -96,10 +97,41 @@ export default function MapView({
     }
   }, [layerFilters.boundariesVisible, boundaryGeo]);
 
+  // Load rail network GeoJSON
+  useEffect(() => {
+    if (layerFilters.railVisible && !railGeo) {
+      fetch('/data/india-railways.geojson')
+        .then(r => r.ok ? r.json() : null)
+        .then(data => { if (data) setRailGeo(data); })
+        .catch(() => {});
+    }
+  }, [layerFilters.railVisible, railGeo]);
+
   const handleMarkerClick = useCallback((plaza: TollPlaza) => onSelectPlaza(plaza), [onSelectPlaza]);
   const routeActive = routeState.isActive && routeState.step !== 'idle';
   const landbandData = filterLandband(layerFilters);
   const colliersData = filterColliers(layerFilters);
+
+  const BASEMAP_TILES: Record<BasemapStyle, { url: string; attribution: string; subdomains?: string; maxZoom?: number }> = {
+    dark: {
+      url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      subdomains: 'abcd',
+      maxZoom: 19,
+    },
+    satellite: {
+      url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+      attribution: '&copy; <a href="https://www.esri.com">Esri</a>, Maxar, Earthstar Geographics',
+      maxZoom: 19,
+    },
+    terrain: {
+      url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+      attribution: '&copy; <a href="https://opentopomap.org">OpenTopoMap</a> contributors',
+      subdomains: 'abc',
+      maxZoom: 17,
+    },
+  };
+  const tileConfig = BASEMAP_TILES[layerFilters.basemap];
 
   return (
     <div className={clsx('flex-1 relative', routeActive ? 'route-mode-cursor' : '')}>
@@ -139,10 +171,11 @@ export default function MapView({
         zoomControl={true}
       >
         <TileLayer
-          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
-          subdomains="abcd"
-          maxZoom={19}
+          key={layerFilters.basemap}
+          url={tileConfig.url}
+          attribution={tileConfig.attribution}
+          subdomains={tileConfig.subdomains}
+          maxZoom={tileConfig.maxZoom ?? 19}
         />
 
         <MapClickHandler onClick={onMapClick} active={routeActive} />
@@ -153,6 +186,15 @@ export default function MapView({
             key="boundaries"
             data={boundaryGeo as GeoJSON.GeoJsonObject}
             style={{ color: '#475569', weight: 1, fillOpacity: 0, opacity: 0.6 }}
+          />
+        )}
+
+        {/* Rail network */}
+        {layerFilters.railVisible && railGeo && (
+          <GeoJSON
+            key="railways"
+            data={railGeo as GeoJSON.GeoJsonObject}
+            style={{ color: '#f97316', weight: 1.5, fillOpacity: 0, opacity: 0.7 }}
           />
         )}
 

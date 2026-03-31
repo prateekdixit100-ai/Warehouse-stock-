@@ -1,13 +1,19 @@
-import { Layers, Map, Eye, EyeOff } from 'lucide-react';
+import { Layers, Map, Eye, EyeOff, Train } from 'lucide-react';
 import clsx from 'clsx';
 import { CLUSTER_COLORS } from '../../data/colliersWarehousing';
 import { HUB_TYPE_LABELS, HUB_TYPE_COLORS } from '../../data/mpLandband';
 
+export type BasemapStyle = 'dark' | 'satellite' | 'terrain';
+
 export interface LayerFilters {
+  // Basemap
+  basemap: BasemapStyle;
   // Toll plazas
   plazasVisible: boolean;
   // State boundaries
   boundariesVisible: boolean;
+  // Rail network
+  railVisible: boolean;
   // MP Landband
   landbandVisible: boolean;
   landbandTypes: string[];   // hub types to show (empty = all)
@@ -19,8 +25,10 @@ export interface LayerFilters {
 }
 
 export const DEFAULT_LAYER_FILTERS: LayerFilters = {
+  basemap: 'dark',
   plazasVisible: true,
   boundariesVisible: true,
+  railVisible: false,
   landbandVisible: false,
   landbandTypes: [],
   colliersVisible: false,
@@ -49,6 +57,27 @@ export default function LayersPanel({ layerFilters: lf, onUpdate }: LayersPanelP
   return (
     <div className="flex flex-col gap-0 overflow-y-auto flex-1 text-xs">
 
+      {/* ── Basemap selector ─────────── */}
+      <div className="px-4 py-3 border-b border-slate-700/40">
+        <div className="text-slate-500 mb-2 font-medium">Basemap</div>
+        <div className="flex gap-1.5">
+          {([['dark','Dark'],['satellite','Satellite'],['terrain','Terrain']] as [BasemapStyle, string][]).map(([key, label]) => (
+            <button
+              key={key}
+              onClick={() => onUpdate({ basemap: key })}
+              className={clsx(
+                'flex-1 py-1.5 rounded border text-xs font-medium transition-colors',
+                lf.basemap === key
+                  ? 'bg-blue-700 border-blue-500 text-white'
+                  : 'border-slate-600 text-slate-400 hover:border-slate-500'
+              )}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* ── State Boundaries ─────────── */}
       <LayerRow
         icon={<Map size={13} />}
@@ -67,6 +96,16 @@ export default function LayersPanel({ layerFilters: lf, onUpdate }: LayersPanelP
         color="#10b981"
         active={lf.plazasVisible}
         onToggle={() => toggle('plazasVisible')}
+      />
+
+      {/* ── Rail Network ─────────────── */}
+      <LayerRow
+        icon={<Train size={13} />}
+        label="Rail Network"
+        sublabel="Indian Railways lines"
+        color="#f97316"
+        active={lf.railVisible}
+        onToggle={() => toggle('railVisible')}
       />
 
       {/* ── MP Landband ─────────────── */}
