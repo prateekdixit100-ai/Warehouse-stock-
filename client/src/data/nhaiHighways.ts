@@ -117,4 +117,32 @@ export const NHAI_HIGHWAYS: NHAIHighway[] = [
     path: [[28.65,77.23],[28.75,77.33],[28.88,77.40],[29.00,77.55],[29.10,77.62],[29.21,77.70]],
     description: 'India\'s first Regional Rapid Transit System (RRTS). Semi-high speed (180 km/h). Delhi Sarai Kale Khan to Meerut.',
   },
+  {
+    id: 'SRT-CHN-EXP', name: 'Surat–Chennai Expressway', nhNumber: 'NH-948B',
+    length_km: 1220, status: 'Awarded', completion_year: 2027, cost_cr: 60000,
+    color: STATUS_COLORS['Awarded'], weight: 2, dashArray: '8 4',
+    path: [[21.17,72.83],[20.27,75.60],[19.00,75.02],[18.40,76.62],[17.38,78.49],[16.51,80.62],[15.83,80.05],[14.47,79.99],[13.63,79.40],[13.08,80.27]],
+    description: '6-lane. Surat to Chennai via Maharashtra, Telangana, AP coast. Reduces coastal freight travel by 30%. Awards underway for most sections.',
+  },
+  {
+    id: 'BLR-VJA-EXP', name: 'Bengaluru–Vijayawada Expressway', nhNumber: 'NH-544G',
+    length_km: 624, status: 'Under Construction', completion_year: 2027, cost_cr: 32000,
+    color: STATUS_COLORS['Under Construction'], weight: 3,
+    path: [[12.97,77.59],[13.34,77.72],[14.47,78.82],[15.14,77.49],[15.83,79.48],[16.51,80.62]],
+    description: '6-lane. Bengaluru to Vijayawada. VCIC + CBIC intersection corridor. Key for AP coastal industrial connectivity.',
+  },
+  {
+    id: 'NAG-HYD-BLR', name: 'Nagpur–Hyderabad–Bengaluru Corridor', nhNumber: 'NH-44 upgrade',
+    length_km: 1100, status: 'Planning', completion_year: 2030,
+    color: STATUS_COLORS['Planning'], weight: 2, dashArray: '6 4',
+    path: [[21.15,79.09],[20.46,78.55],[19.08,79.53],[17.38,78.49],[16.83,77.73],[15.14,77.49],[13.34,77.72],[12.97,77.59]],
+    description: 'Proposed 6-lane. North–South HNIC backbone. Nagpur zero-mile to Bengaluru. Passes through Telangana pharmaceutical belt.',
+  },
+  {
+    id: 'IND-HYD', name: 'Indore–Hyderabad Corridor', nhNumber: 'NH-752E',
+    length_km: 687, status: 'Awarded', completion_year: 2027, cost_cr: 28000,
+    color: STATUS_COLORS['Awarded'], weight: 2, dashArray: '8 4',
+    path: [[22.72,75.86],[22.00,76.78],[21.25,77.42],[20.55,77.74],[20.03,78.07],[19.15,79.12],[17.90,79.35],[17.38,78.49]],
+    description: '4/6-lane. Indore to Hyderabad. Connects MP textile/auto belt to Telangana pharma hub. Passes through Vidarbha industrial belt.',
+  },
 ];
