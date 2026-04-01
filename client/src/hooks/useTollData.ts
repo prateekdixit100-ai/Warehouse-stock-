@@ -1,13 +1,16 @@
 import { useMemo, useState, useEffect } from 'react';
-import { FilterState, TollPlaza, AppStats, VehicleType } from '../types';
+import { FilterState, TollPlaza, AppStats, VehicleType, STATE_REGION_MAP } from '../types';
 
 const DEFAULT_FILTERS: FilterState = {
   states: [],
   highways: [],
+  regions: [],
   minFee: 0,
   maxFee: 2000,
   searchQuery: '',
   vehicleType: 'car_jeep_van',
+  sortBy: 'fee_desc',
+  topN: null,
 };
 
 export function useTollData() {
@@ -32,9 +35,13 @@ export function useTollData() {
   );
 
   const filteredPlazas = useMemo((): TollPlaza[] => {
-    return allPlazas.filter(plaza => {
+    let result = allPlazas.filter(plaza => {
       if (filters.states.length > 0 && !filters.states.includes(plaza.state)) return false;
       if (filters.highways.length > 0 && !filters.highways.includes(plaza.highway)) return false;
+      if (filters.regions.length > 0) {
+        const region = STATE_REGION_MAP[plaza.state];
+        if (!region || !filters.regions.includes(region)) return false;
+      }
       const fee = plaza.fees[filters.vehicleType];
       if (fee < filters.minFee || fee > filters.maxFee) return false;
       if (filters.searchQuery) {
@@ -48,6 +55,13 @@ export function useTollData() {
       }
       return true;
     });
+    // Sort
+    if (filters.sortBy === 'fee_desc') result = [...result].sort((a, b) => b.fees[filters.vehicleType] - a.fees[filters.vehicleType]);
+    else if (filters.sortBy === 'fee_asc') result = [...result].sort((a, b) => a.fees[filters.vehicleType] - b.fees[filters.vehicleType]);
+    else result = [...result].sort((a, b) => a.name.localeCompare(b.name));
+    // Top N
+    if (filters.topN !== null) result = result.slice(0, filters.topN);
+    return result;
   }, [allPlazas, filters]);
 
   const stats = useMemo((): AppStats => {
@@ -101,8 +115,10 @@ export function useTollData() {
     let count = 0;
     if (filters.states.length > 0) count++;
     if (filters.highways.length > 0) count++;
+    if (filters.regions.length > 0) count++;
     if (filters.minFee > 0 || filters.maxFee < 2000) count++;
     if (filters.searchQuery) count++;
+    if (filters.topN !== null) count++;
     return count;
   }, [filters]);
 

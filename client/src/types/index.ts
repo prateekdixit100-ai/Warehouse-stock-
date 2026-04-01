@@ -44,14 +44,35 @@ export interface TollPlaza {
   plaza_type?: string;
 }
 
+export type IndiaRegion = 'North' | 'South' | 'East' | 'West' | 'Central' | 'Northeast';
+
+export const STATE_REGION_MAP: Record<string, IndiaRegion> = {
+  'Jammu and Kashmir': 'North', 'Ladakh': 'North', 'Himachal Pradesh': 'North',
+  'Punjab': 'North', 'Haryana': 'North', 'Uttarakhand': 'North',
+  'Uttar Pradesh': 'North', 'Delhi': 'North', 'Rajasthan': 'North',
+  'Tamil Nadu': 'South', 'Kerala': 'South', 'Karnataka': 'South',
+  'Andhra Pradesh': 'South', 'Telangana': 'South', 'Puducherry': 'South',
+  'West Bengal': 'East', 'Odisha': 'East', 'Bihar': 'East', 'Jharkhand': 'East',
+  'Maharashtra': 'West', 'Gujarat': 'West', 'Goa': 'West',
+  'Madhya Pradesh': 'Central', 'Chhattisgarh': 'Central',
+  'Assam': 'Northeast', 'Meghalaya': 'Northeast', 'Manipur': 'Northeast',
+  'Mizoram': 'Northeast', 'Nagaland': 'Northeast', 'Tripura': 'Northeast',
+  'Arunachal Pradesh': 'Northeast', 'Sikkim': 'Northeast',
+};
+
+export type TollSortBy = 'fee_desc' | 'fee_asc' | 'name';
+
 // ── Filter / UI state ───────────────────────────────────────────────────────
 export interface FilterState {
   states: string[];
   highways: string[];
+  regions: IndiaRegion[];
   minFee: number;
   maxFee: number;
   searchQuery: string;
   vehicleType: VehicleType;
+  sortBy: TollSortBy;
+  topN: number | null;  // show only top N by fee; null = all
 }
 
 export interface RoutePoint {

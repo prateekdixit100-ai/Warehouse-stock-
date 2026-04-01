@@ -1,7 +1,8 @@
-import { Layers, Map, Eye, EyeOff, Train } from 'lucide-react';
+import { Layers, Map, Eye, EyeOff, Train, Building2 } from 'lucide-react';
 import clsx from 'clsx';
 import { CLUSTER_COLORS } from '../../data/colliersWarehousing';
 import { HUB_TYPE_LABELS, HUB_TYPE_COLORS } from '../../data/mpLandband';
+import { PARK_TYPE_LABELS, PARK_TYPE_COLORS, ParkType } from '../../data/industrialParks';
 
 export type BasemapStyle = 'dark' | 'satellite' | 'terrain';
 
@@ -14,6 +15,14 @@ export interface LayerFilters {
   boundariesVisible: boolean;
   // Rail network
   railVisible: boolean;
+  railStationsVisible: boolean;
+  // Dedicated Freight Corridors
+  dfcVisible: boolean;
+  // Upcoming NHAI highways
+  upcomingHighwaysVisible: boolean;
+  // Industrial Parks
+  industrialParksVisible: boolean;
+  industrialParkTypes: string[]; // empty = all
   // MP Landband
   landbandVisible: boolean;
   landbandTypes: string[];   // hub types to show (empty = all)
@@ -29,6 +38,11 @@ export const DEFAULT_LAYER_FILTERS: LayerFilters = {
   plazasVisible: true,
   boundariesVisible: true,
   railVisible: false,
+  railStationsVisible: false,
+  dfcVisible: false,
+  upcomingHighwaysVisible: false,
+  industrialParksVisible: false,
+  industrialParkTypes: [],
   landbandVisible: false,
   landbandTypes: [],
   colliersVisible: false,
@@ -99,14 +113,82 @@ export default function LayersPanel({ layerFilters: lf, onUpdate }: LayersPanelP
       />
 
       {/* ── Rail Network ─────────────── */}
-      <LayerRow
-        icon={<Train size={13} />}
+      <LayerSection
         label="Rail Network"
-        sublabel="Indian Railways lines"
+        sublabel="Indian Railways lines + stations"
         color="#f97316"
         active={lf.railVisible}
         onToggle={() => toggle('railVisible')}
+      >
+        {lf.railVisible && (
+          <div className="px-4 pb-3">
+            <div className="flex items-center justify-between">
+              <span className="text-slate-400 text-xs">Major Stations</span>
+              <button
+                onClick={() => toggle('railStationsVisible')}
+                className={clsx('flex items-center gap-1 text-xs px-2 py-0.5 rounded border transition-colors',
+                  lf.railStationsVisible ? 'bg-orange-700/40 border-orange-500/60 text-orange-200' : 'border-slate-600 text-slate-500 hover:border-slate-500'
+                )}
+              >
+                {lf.railStationsVisible ? <Eye size={10}/> : <EyeOff size={10}/>}
+                {lf.railStationsVisible ? 'Visible' : 'Hidden'}
+              </button>
+            </div>
+          </div>
+        )}
+      </LayerSection>
+
+      {/* ── Dedicated Freight Corridors ── */}
+      <LayerRow
+        icon={<div className="w-3 h-1.5 rounded" style={{ background: 'linear-gradient(90deg,#3b82f6,#10b981)' }} />}
+        label="Dedicated Freight Corridors"
+        sublabel="EDFC · WDFC · Phase II (planned)"
+        color="#3b82f6"
+        active={lf.dfcVisible}
+        onToggle={() => toggle('dfcVisible')}
       />
+
+      {/* ── Upcoming Highways ────────── */}
+      <LayerRow
+        icon={<div className="w-3 h-1.5 rounded bg-amber-400" />}
+        label="Upcoming Highways"
+        sublabel="Bharatmala Phase I corridors"
+        color="#f59e0b"
+        active={lf.upcomingHighwaysVisible}
+        onToggle={() => toggle('upcomingHighwaysVisible')}
+      />
+
+      {/* ── Industrial Parks ─────────── */}
+      <LayerSection
+        label="Industrial Parks"
+        sublabel="SEZs · MMLPs · ICDs · PM MITRA"
+        color="#06b6d4"
+        active={lf.industrialParksVisible}
+        onToggle={() => toggle('industrialParksVisible')}
+      >
+        {lf.industrialParksVisible && (
+          <div className="px-4 pb-3">
+            <div className="text-slate-500 mb-1.5">Park types</div>
+            <div className="flex flex-wrap gap-1">
+              {(Object.keys(PARK_TYPE_LABELS) as ParkType[]).map(t => {
+                const selected = lf.industrialParkTypes.length === 0 || lf.industrialParkTypes.includes(t);
+                return (
+                  <button
+                    key={t}
+                    onClick={() => toggleArr('industrialParkTypes', t)}
+                    className={clsx('px-2 py-0.5 rounded border text-xs transition-colors',
+                      selected ? 'text-white border-transparent' : 'border-slate-600 text-slate-500'
+                    )}
+                    style={selected ? { background: PARK_TYPE_COLORS[t], borderColor: PARK_TYPE_COLORS[t] } : {}}
+                  >
+                    {t}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </LayerSection>
 
       {/* ── MP Landband ─────────────── */}
       <LayerSection
